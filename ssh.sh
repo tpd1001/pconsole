@@ -26,17 +26,21 @@
 # list all possible paths where ssh could be
 PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/ssh:/usr/local/ssh/bin:/usr/ssh:/usr/ssh/bin:/etc:/usr/bsd:/etc/ssh:/etc/ssh/bin:/usr/share/bin:/usr/share/ssh:/opt/bin:/opt/ssh:/opt/ssh/bin:/usr/etc
 
+# enter a loop to catch non-zero exits and give the user
+# the option to restart the session if they want to
+while :; do
+
 SSH=`type ssh 2>/dev/null`
 if [ -z "${SSH}" ]
 then
 	telnet ${P_CONNECT_CMD_OPTS} $*
 else
-    if [ -z "$2" ]
-    then 
-        ssh ${P_CONNECT_CMD_OPTS} $*
-    else
-        ssh ${P_CONNECT_CMD_OPTS} $1 -p $2
-    fi
+	if [ -z "$2" ]
+	then
+		ssh ${P_CONNECT_CMD_OPTS} $*
+	else
+		ssh ${P_CONNECT_CMD_OPTS} $1 -p $2
+	fi
 fi
 
 # if the ssh failed, leave the window open to help debug why
@@ -44,8 +48,15 @@ return=$?
 if [ $return -ne 0 ]
 then
 	echo "$0 finished with exit status of $return"
-	echo "Press Enter to close window..."
+	echo "Press Y and Enter to retry or just Enter to close window..."
 	read ans
 fi
+if [ "$ans" = "" ]
+then
+	break
+fi
+unset ans
+
+done
 
 # EOB
