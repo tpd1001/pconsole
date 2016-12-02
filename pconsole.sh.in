@@ -73,7 +73,15 @@ function get_tty {
 	fi
 
 	PS_PERSONALITY=posix		# may be needed for GNU ps :P
-	ps -ef 2>/dev/null | awk '{ print $3 " " $6 }' | egrep "^$1" | awk '{ print $2 }'
+
+	# if the PID we're looking for has gone, we must fail
+	# or we'll go into an infinite loop.
+	if [ "`ps -ef | awk '{print $2}' | egrep \"^$1\" `" = "" ];
+	then
+		echo fail
+	else
+		ps -ef 2>/dev/null | awk '{ print $3 " " $6 }' | egrep "^$1" | awk '{ print $2 }'
+	fi
 }
 
 
@@ -125,6 +133,13 @@ THIS_TTY=`tty`
 		do
 			TTY=`get_tty "${PID}"`
 
+			# if the xterm fails to launch (eg. eg have no display),
+			# get_tty will return "fail" which we intercept here.
+			if [ "${TTY}" = "fail" ]
+			then
+				CONTINUE=1
+			fi
+
 # sometimes xterm is too slow forking off, and get_tty will give the same
 # tty as we started from. This would be incorrect, and if so, we try again
 			if [ "/dev/${TTY}" = "${THIS_TTY}" ];
@@ -133,6 +148,14 @@ THIS_TTY=`tty`
 				sleep 1
 			fi
 		done
+
+		# if the xterm launch failed, continue with the next PID in the list.
+		if [ "$CONTINUE" = "1" ];
+		then
+			CONTINUE=''
+			echo "Eek!, $P_TERM launch failed. Check your DISPLAY or X forwarding"
+			continue
+		fi
 
 		HOST=`echo ${HOSTLIST} | cut -d\  -f1`
 		HOSTLIST=`echo ${HOSTLIST} | cut -d\  -f2-999`
