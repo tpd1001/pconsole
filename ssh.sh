@@ -29,14 +29,23 @@ PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/ssh:/usr/local/ssh/
 SSH=`type ssh 2>/dev/null`
 if [ -z "${SSH}" ]
 then
-	telnet $*
+	telnet ${P_CONNECT_CMD_OPTS} $*
 else
     if [ -z "$2" ]
     then 
-        ssh $*
+        ssh ${P_CONNECT_CMD_OPTS} $*
     else
-        ssh $1 -p $2
+        ssh ${P_CONNECT_CMD_OPTS} $1 -p $2
     fi
+fi
+
+# if the ssh failed, leave the window open to help debug why
+return=$?
+if [ $return -ne 0 ]
+then
+	echo "$0 finished with exit status of $return"
+	echo "Press Enter to close window..."
+	read ans
 fi
 
 # EOB
