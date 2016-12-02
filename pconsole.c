@@ -49,6 +49,9 @@
 
 int flags = FLAGS_ECHO;
 
+int command_key=1; // A to start with;
+char command_key_str[]="A"; // A to start with;
+
 void command_mode(void) {
 char buf[256], *p;
 
@@ -84,8 +87,8 @@ char buf[256], *p;
 	flags &= ~FLAGS_CMD_MODE;
 
 	printf("\n"
-		"Press <Ctlr-A> for command mode\n"
-		"> ");
+		"Press <Ctlr-%s> for command mode\n"
+		"> ",command_key_str);
 	fflush(stdout);
 	terminal_mode(TERMINAL_RAW);
 }
@@ -99,15 +102,15 @@ Conn *c, *c_next;
 		command_mode();										/* start in command mode */
 	else {
 		printf("\n"
-			"Press <Ctlr-A> for command mode\n"
-			"> ");
+			"Press <Ctlr-%s> for command mode\n"
+			"> ",command_key_str);
 		fflush(stdout);
 		terminal_mode(TERMINAL_RAW);
 	}
 	while(read(fileno(stdin), &kar, 1) > 0) {
 		key = kar & 0xff;
-		if (key == 1) {										/* Ctrl-A => command mode */
-			printf("<Ctrl-A>\n");
+		if (key == command_key) {										/* Ctrl-A => command mode */
+			printf("<Ctrl-%s>\n",command_key_str);
 			command_mode();
 			continue;
 		}
@@ -188,6 +191,8 @@ RETSIGTYPE sig_exit(int sig) {
 }
 
 int main(int argc, char **argv) {
+	char * tmpptr = NULL;
+
 	if (geteuid()) {
 		fprintf(stderr, "You must be root to run this program or this program should be setuid root.\n");
 		return -1;
@@ -207,6 +212,17 @@ int main(int argc, char **argv) {
 
 	if (argc > 1)
 		cmd_attach(&argv[1]);
+
+	if ((tmpptr = getenv("P_COMMAND_KEY")) != NULL) {
+		strcpy(command_key_str,tmpptr);
+		printf("Setting P_COMMAND_KEY to %s\n",tmpptr);
+		command_key = ((int)*tmpptr);
+		command_key -= 64;
+		if (command_key > 30) {
+			command_key -= 32;
+		}
+		}
+	printf("Setting P_COMMAND_KEY to %d\n",command_key);
 
 	pconsole();
 	cmd_exit(NULL);
