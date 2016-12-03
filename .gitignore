@@ -1,2 +1,10 @@
+Makefile
+.depend
+config.cache
+config.h
+config.log
+config.status
+*.o
+*.bak
 *.rej
 *.orig
