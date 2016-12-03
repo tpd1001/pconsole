@@ -43,8 +43,15 @@ else
 	fi
 fi
 
-# if the ssh failed, leave the window open to help debug why
 return=$?
+
+# allow an environment variable to be defined to always keep the window open
+if [ -n "${P_KEEP_TERM}" ]
+then
+	return=1
+fi
+
+# if the ssh failed, leave the window open to help debug why
 if [ $return -ne 0 ]
 then
 	echo "$0 finished with exit status of $return"
