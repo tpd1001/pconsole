@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /usr/bin/env bash
 #
 #   pconsole WJ101
 #   Copyright (C) 2001  Walter de Jong <walter@heiho.net>
@@ -37,9 +37,9 @@ then
 else
 	if [ -z "$2" ]
 	then
-		ssh ${P_CONNECT_CMD_OPTS} $*
+		${ssh:-ssh} ${P_CONNECT_CMD_OPTS} $*
 	else
-		ssh ${P_CONNECT_CMD_OPTS} $1 -p $2
+		${ssh:-ssh} ${P_CONNECT_CMD_OPTS} $1 -p $2
 	fi
 fi
 
