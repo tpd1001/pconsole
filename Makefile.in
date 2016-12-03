@@ -30,7 +30,6 @@ LIBS =
 INCLUDE = include
 
 INSTALL = @INSTALL@
-INSTALL_SETUID_PROGRAM = @INSTALL@ -m 4110
 INSTALL_PROGRAM = @INSTALL@ -m 0750
 INSTALL_SCRIPT = @INSTALL@ -m 0750
 INSTALL_DATA = @INSTALL@ -m 0640
@@ -95,9 +94,11 @@ sinstall: all
 	@( \
 		echo "installing setuid root pconsole ..."; \
 		mkdir -p $(bindir) 2>/dev/null ; \
-		@INSTALL_SETUID_PROGRAM@ pconsole $(bindir) ;		\
+		@INSTALL_PROGRAM@ pconsole $(bindir) ;		\
 		@INSTALL_SCRIPT@ pconsole.sh $(bindir) ;	\
 		@INSTALL_SCRIPT@ ssh.sh $(bindir) ;			\
+		chown root $(bindir)/pconsole ; \
+		chmod u+s $(bindir)/pconsole ; \
 	)
 
 uninstall:
