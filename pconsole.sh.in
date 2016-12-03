@@ -31,7 +31,7 @@ then
 	set -x
 fi
 
-PATH=/bin:/usr/bin:/usr/bin/X11:/usr/openwin/bin:/usr/local/bin:/usr/bsd:/usr/share/bin:/opt/bin:/etc:/usr/etc
+PATH=/bin:/usr/bin:/usr/bin/X11:/opt/X11/bin:/usr/openwin/bin:/usr/local/bin:/usr/bsd:/usr/share/bin:/opt/bin:/etc:/usr/etc
 
 prefix=@prefix@
 exec_prefix=@exec_prefix@
