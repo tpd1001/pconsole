@@ -23,7 +23,7 @@
 #ifndef CSTRING_H_WJ101
 #define CSTRING_H_WJ101	1
 
-#include "config.h"
+#include "../config.h"
 
 #include <string.h>
 

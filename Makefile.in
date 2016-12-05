@@ -30,12 +30,12 @@ LIBS =
 INCLUDE = include
 
 INSTALL = @INSTALL@
-INSTALL_PROGRAM = @INSTALL@ -m 0750
-INSTALL_SCRIPT = @INSTALL@ -m 0750
-INSTALL_DATA = @INSTALL@ -m 0640
+INSTALL_PROGRAM = @INSTALL@ -m 0755
+INSTALL_SCRIPT = @INSTALL@ -m 0755
+INSTALL_DATA = @INSTALL@ -m 0644
 
 .c.o:
-	$(CC) -I$(INCLUDE) $(CFLAGS) -c $<
+	$(CC) -I$(INCLUDE) -I. $(CFLAGS) -c $<
 
 OBJS = List.o Conn.o cstring.o terminal.o commands.o pconsole.o
 
