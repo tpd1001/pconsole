@@ -23,7 +23,7 @@
 #ifndef CONN_H_WJ101
 #define CONN_H_WJ101	1
 
-#include "config.h"
+#include "../config.h"
 #include "List.h"
 
 #ifdef HAVE_ST_RDEV
