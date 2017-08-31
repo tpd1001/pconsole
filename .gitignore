@@ -1,3 +1,8 @@
+# ignore the compiled binary and the ./configure generated pconsole.sh
+pconsole
+pconsole.sh
+
+# ignore transient files that are created by the build process
 Makefile
 .depend
 config.cache
@@ -5,6 +10,8 @@ config.h
 config.log
 config.status
 *.o
+
+# ignore backup files and patching by-products
 *.bak
 *.rej
 *.orig
